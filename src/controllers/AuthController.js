@@ -2,6 +2,8 @@ const { genSaltSync, compareSync, hashSync } = require('bcrypt');
 const AuthModel = require('../models/Auth');
 const { createToken } = require('../helpers/CreateToken');
 const validate = require('../helpers/validation');
+const { response } = require('../helpers/response');
+
 module.exports = {
 	register: async (req, res) => {
 		const data = req.body;
@@ -11,28 +13,15 @@ module.exports = {
 				data.password = hashSync(req.body.password, genSaltSync(1));
 				const result = await AuthModel.Register(data);
 				if (result) {
-					return res.status(200).json({
-						success: true,
-						message: 'Register Success',
-						data: result,
-					});
+					return response(res, true, result, 200);
 				}
-				return res.status(400).json({
-					success: false,
-					message: 'Register Failled',
-				});
+				return response(res, false, 'Register Failled', 400);
 			}
 			let errorMessage = validation.error.details[0].message;
 			errorMessage = errorMessage.replace(/"/g, '');
-			return res.status(502).json({
-				success: false,
-				message: errorMessage,
-			});
+			return response(res, false, errorMessage, 502);
 		} catch (error) {
-			return res.status(500).json({
-				success: false,
-				message: 'Internal Server Error',
-			});
+			return response(res, false, 'Internal Server Error', 500);
 		}
 	},
 	login: async (req, res) => {
@@ -44,37 +33,21 @@ module.exports = {
 				if (result.length === 1) {
 					const PasswordHash = result[0].password;
 					if (compareSync(data.password, PasswordHash)) {
-                        let token = createToken(result, process.env.JWT_KEY, '24h');
-                        result[0].token = token
+						let token = createToken(result, process.env.JWT_KEY, '24h');
+						result[0].token = token;
 						delete result[0].password;
-						return res.status(200).json({
-							success: true,
-							message: 'login Success',
-							data: result,
-						});
+						return response(res, true, result, 200);
 					}
-					return res.status(502).json({
-						success: false,
-						message: 'Password wrong',
-					});
+					return response(res, false, 'Password wrong', 502);
 				}
-				return res.status(400).json({
-					success: false,
-					message: 'Account is not registered',
-				});
+				return response(res, false, 'Account is not registered', 400);
 			}
 			let errorMessage = validation.error.details[0].message;
 			errorMessage = errorMessage.replace(/"/g, '');
-			return res.status(502).json({
-				success: false,
-				message: errorMessage,
-			});
+			return response(res, false, errorMessage, 502);
 		} catch (error) {
 			console.log(error);
-			return res.status(500).json({
-				success: false,
-				message: 'Internal Server Error',
-			});
+			return response(res, false, 'Internal Server Error', 500);
 		}
 	},
 };
