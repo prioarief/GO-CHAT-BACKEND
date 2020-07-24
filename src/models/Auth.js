@@ -1,5 +1,5 @@
 const connection = require('../config/database');
-const query = require('../helpers/query/auth')
+const query = require('../helpers/query/auth');
 module.exports = {
 	Register: (data) => {
 		return new Promise((resolve, reject) => {
@@ -16,7 +16,7 @@ module.exports = {
 			});
 		});
 	},
-	
+
 	Login: (data) => {
 		return new Promise((resolve, reject) => {
 			connection.query(query.login, data, (error, result) => {
@@ -24,11 +24,6 @@ module.exports = {
 					return reject(error);
 				}
 
-				// const inserted = {
-				// 	id: result.insertId,
-				// 	...data,
-				// };
-				console.log(result)
 				resolve(result);
 			});
 		});

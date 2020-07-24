@@ -1,5 +1,6 @@
 const { genSaltSync, compareSync, hashSync } = require('bcrypt');
 const AuthModel = require('../models/Auth');
+const { createToken } = require('../helpers/CreateToken');
 const validate = require('../helpers/validation');
 module.exports = {
 	register: async (req, res) => {
@@ -43,6 +44,8 @@ module.exports = {
 				if (result.length === 1) {
 					const PasswordHash = result[0].password;
 					if (compareSync(data.password, PasswordHash)) {
+                        let token = createToken(result, process.env.JWT_KEY, '24h');
+                        result[0].token = token
 						delete result[0].password;
 						return res.status(200).json({
 							success: true,
