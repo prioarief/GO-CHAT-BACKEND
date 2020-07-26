@@ -50,4 +50,19 @@ module.exports = {
 			return response(res, false, 'Internal Server Error', 500);
 		}
 	},
+	getMyProfile: async (req, res) => {
+		const id = req.params.id;
+		try {
+			if (!id) {
+				return response(res, false, 'Id is required', 502);
+			}
+			const data = await AuthModel.Myprofile(id);
+			if(data.length === 1){
+				return response(res, true, data, 200);
+			}
+			return response(res, false, 'Data not found', 404);
+		} catch (error) {
+			console.log(error);
+		}
+	},
 };

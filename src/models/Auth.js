@@ -19,7 +19,18 @@ module.exports = {
 
 	Login: (data) => {
 		return new Promise((resolve, reject) => {
-			connection.query(query.login, data, (error, result) => {
+			connection.query(query.getData('username', data), (error, result) => {
+				if (error) {
+					return reject(error);
+				}
+
+				resolve(result);
+			});
+		});
+	},
+	Myprofile: (id) => {
+		return new Promise((resolve, reject) => {
+			connection.query(query.getData('id', id), (error, result) => {
 				if (error) {
 					return reject(error);
 				}

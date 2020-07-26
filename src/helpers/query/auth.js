@@ -1,4 +1,6 @@
 module.exports = {
 	register: 'INSERT INTO users SET ?',
-	login: 'SELECT * FROM users WHERE username = ? ',
+	getData: (key, value) => {
+		return `SELECT * FROM users WHERE ${key} = ${value} `;
+	},
 };
