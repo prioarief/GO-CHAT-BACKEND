@@ -57,12 +57,34 @@ module.exports = {
 				return response(res, false, 'Id is required', 502);
 			}
 			const data = await AuthModel.Myprofile(id);
-			if(data.length === 1){
+			if (data.length === 1) {
 				return response(res, true, data, 200);
 			}
 			return response(res, false, 'Data not found', 404);
 		} catch (error) {
 			console.log(error);
+			return response(res, false, 'Internal Server Error', 500);
+		}
+	},
+	editProfile: async (req, res) => {
+		const id = req.params.id;
+		const data = req.body;
+		const editData = async (id, data) => {
+			const result = await AuthModel.EditProfile(id, data);
+				if (result.affectedRows === 1) {
+					return response(res, true, data, 200);
+				}
+				return response(res, false, 'Data not found', 404);
+		}
+		try {
+			if (req.file !== undefined) {
+				data.image = req.file.filename;
+				await editData(id, data)
+			}
+			await editData(id, data)
+		} catch (error) {
+			console.log(error);
+			return response(res, false, 'Internal Server Error', 500);
 		}
 	},
 };
