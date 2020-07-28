@@ -69,21 +69,25 @@ module.exports = {
 	editProfile: async (req, res) => {
 		const id = req.params.id;
 		const data = req.body;
-		const editData = async (id, data) => {
-			const result = await AuthModel.EditProfile(id, data);
+		console.log(data);
+		try {
+			const editData = async (id, data) => {
+				const result = await AuthModel.EditProfile(id, data);
 				if (result.affectedRows === 1) {
+					delete data.password
 					return response(res, true, data, 200);
 				}
 				return response(res, false, 'Data not found', 404);
-		}
-		try {
+			};
 			if (req.file !== undefined) {
+				if(data.password){
+					data.password = hashSync(req.body.password, genSaltSync(1));
+				}
 				data.image = req.file.filename;
-				await editData(id, data)
+				return await editData(id, data);
 			}
-			await editData(id, data)
+			await editData(id, data);
 		} catch (error) {
-			console.log(error);
 			return response(res, false, 'Internal Server Error', 500);
 		}
 	},
