@@ -28,6 +28,7 @@ module.exports = {
 		const data = req.body;
 		try {
 			const validation = validate.LoginValidation(data);
+			console.log(data)
 			if (validation.error === undefined) {
 				const result = await AuthModel.Login(data.username);
 				if (result.length === 1) {

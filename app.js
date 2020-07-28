@@ -1,6 +1,8 @@
 require('dotenv').config();
 const express = require('express');
 const app = express();
+const server = require('http').createServer(app)
+const io = require('socket.io')(server)
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const cors = require('cors');
@@ -12,6 +14,13 @@ database.connect((err) => {
 	console.log('Database Connected');
 });
 
+io.on('connection', (socket) => {
+	console.log('user connected')
+	socket.on('disconnect', () => {
+		console.log('disconnect')
+	})
+})
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(morgan('dev'));
@@ -22,6 +31,6 @@ app.get('*', (req, res) => {
 	res.status(404).send('Not found');
 });
 
-app.listen(process.env.APP_PORT, () =>
+server.listen(process.env.APP_PORT, () =>
 	console.log(`Server running on port ${process.env.APP_PORT}`)
 );

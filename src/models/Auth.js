@@ -17,7 +17,7 @@ module.exports = {
 		});
 	},
 
-	Login: (data) => {
+	Login: (data) => { 
 		return new Promise((resolve, reject) => {
 			connection.query(query.getData('username', data), (error, result) => {
 				if (error) {
