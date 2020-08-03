@@ -51,4 +51,40 @@ module.exports = {
 			});
 		});
 	},
+
+	AddContact: (data) => {
+		return new Promise((resolve, reject) => {
+			connection.query(query.addContact, data, (error, result) => {
+				if (error) {
+					return reject(error);
+				}
+
+				resolve(result);
+			});
+		});
+	},
+	
+	getContact: (id) => {
+		return new Promise((resolve, reject) => {
+			connection.query(query.getContact, id, (error, result) => {
+				if (error) {
+					return reject(error);
+				}
+
+				resolve(result);
+			});
+		});
+	},
+	
+	searchUsername: (key) => {
+		return new Promise((resolve, reject) => {
+			connection.query(query.searchContact(key), (error, result) => {
+				if (error) {
+					return reject(error);
+				}
+				
+				resolve(result);
+			});
+		});
+	}
 };

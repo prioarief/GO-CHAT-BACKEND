@@ -4,14 +4,14 @@ const validate = require('../helpers/validation');
 module.exports = {
 	sendMessage: async (req, res) => {
         const data = req.body;
-        data.receiver = 12
-        data.sender = parseInt(req.params.id)
+        data.user = req.decoded.result[0].id
+		data.receiver = parseInt(req.params.id)
 		try {
-            console.log(data)
 			const validation = validate.sendMessageValidation(data);
 			if (validation.error === undefined) {
 				const result = await SendMessage(data);
 				if (result) {
+					req.io.emit('chat', result)
 					return response(res, true, result, 200);
 				}
 				return response(res, false, 'Send Failled', 400);
@@ -26,31 +26,33 @@ module.exports = {
 	},
 	getMessage: async (req, res) => {
         const data = {
-            receiver: 12,
-            sender: parseInt(req.params.id)
+            user: req.decoded.result[0].id,
+            receiver: parseInt(req.params.id)
         }
 		try {
-			const validation = validate.getMessageValidation(data);
-			if (validation.error === undefined) {
-				const result = await getMessage(data);
-				if (result) {
-					return response(res, true, result, 200);
-				}
-				return response(res, false, 'Send Failled', 400);
+			// const validation = validate.getMessageValidation(data);
+			const result = await getMessage(data);
+			if (result) {
+				req.io.emit('chat-list', result)
+				return response(res, true, result, 200);
 			}
-            let errorMessage = validation.error.details[0].message;
-			errorMessage = errorMessage.replace(/"/g, '');
-			return response(res, false, errorMessage, 502);
+			return response(res, false, 'Send Failled', 400);
+			// if (validation.error === undefined) {
+			// }
+            // let errorMessage = validation.error.details[0].message;
+			// errorMessage = errorMessage.replace(/"/g, '');
+			// return response(res, false, errorMessage, 502);
 		} catch (error) {
             console.log(error);
             return response(res, false, 'Internal Server Error', 500);
 		}
 	},
 	getMyMessage: async (req, res) => {
-        const id = 12
+        const id = req.params.id
+        const me = req.decoded.result[0].id;
 		try {
 			// const validation = validate.getMessageValidation(data);
-			const result = await getMyMessage(id);
+			const result = await getMyMessage(me);
 			if (result) {
 				return response(res, true, result, 200);
 			}

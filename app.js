@@ -1,8 +1,8 @@
 require('dotenv').config();
 const express = require('express');
 const app = express();
-const server = require('http').createServer(app)
-const io = require('socket.io')(server)
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const cors = require('cors');
@@ -15,17 +15,27 @@ database.connect((err) => {
 });
 
 io.on('connection', (socket) => {
-	console.log('user connected')
+	console.log('user connected');
+	socket.on('chat message', (msg) => {
+		console.log(msg);
+	});
 	socket.on('disconnect', () => {
-		console.log('disconnect')
-	})
-})
+		console.log('disconnect');
+	});
+});
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(morgan('dev'));
 app.use(cors());
+app.use((req, res, next) => {
+	req.io = io;
+	next();
+  })
+app.use('/images', express.static('src/images'));
 app.use(route);
+
+
 
 app.get('*', (req, res) => {
 	res.status(404).send('Not found');

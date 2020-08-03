@@ -9,7 +9,7 @@ module.exports = {
 				}
 
 				const inserted = {
-					id: result.insertId,
+					_id: result.insertId,
 					...data,
 				};
 				resolve(inserted);
@@ -19,7 +19,7 @@ module.exports = {
 
 	getMessage: (data) => {
 		return new Promise((resolve, reject) => {
-			connection.query(query.getMessage(data.receiver, data.sender), (error, result) => {
+			connection.query(query.getMessage(data.receiver, data.user), (error, result) => {
 				if (error) {
 					reject(error);
 				}
