@@ -141,8 +141,9 @@ module.exports = {
 	},
 	searchUsername: async (req, res) => {
 		const keyword = req.query.search;
+		const id = req.decoded.result[0].id;
 		try {
-			const result = await AuthModel.searchUsername(keyword);
+			const result = await AuthModel.searchUsername(keyword, id);
 			if(result.length >= 1){
 				// delete result[0].password
 				return response(res, true, result, 200);

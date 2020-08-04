@@ -76,9 +76,9 @@ module.exports = {
 		});
 	},
 	
-	searchUsername: (key) => {
+	searchUsername: (key, id) => {
 		return new Promise((resolve, reject) => {
-			connection.query(query.searchContact(key), (error, result) => {
+			connection.query(query.searchContact(key, id), (error, result) => {
 				if (error) {
 					return reject(error);
 				}
