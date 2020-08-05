@@ -39,4 +39,15 @@ module.exports = {
 			});
 		});
 	},
+	updateStatusMessage: (data) => {
+		return new Promise((resolve, reject) => {
+			connection.query(query.updateMessage(data.me, data.id), (error, result) => {
+				if (error) {
+					reject(error);
+				}
+
+				resolve(result);
+			});
+		});
+	},
 };

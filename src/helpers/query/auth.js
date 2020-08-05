@@ -4,7 +4,7 @@ module.exports = {
 	searchContact: (key, id) => {
 		return `SELECT id, name, username, image FROM users WHERE username LIKE '%${key}%' AND id != ${id}`
 	},
-	getContact: 'SELECT id , (SELECT name from users WHERE users.id = contact.friend_id) AS friendName, (SELECT image from users WHERE users.id = contact.friend_id) AS friendImage, (SELECT id from users WHERE users.id = contact.friend_id) AS idFriend, (SELECT longitude from users WHERE users.id = contact.friend_id) AS longitude, (SELECT latitude from users WHERE users.id = contact.friend_id) AS latitude FROM contact WHERE contact.user_id = ? ORDER BY friendName ASC',
+	getContact: 'SELECT id, user_id , (SELECT name from users WHERE users.id = contact.friend_id) AS friendName, (SELECT image from users WHERE users.id = contact.friend_id) AS friendImage, (SELECT id from users WHERE users.id = contact.friend_id) AS idFriend, (SELECT longitude from users WHERE users.id = contact.friend_id) AS longitude, (SELECT latitude from users WHERE users.id = contact.friend_id) AS latitude FROM contact WHERE contact.user_id = ? ORDER BY friendName ASC',
 	getData: (key, value) => {
 		return `SELECT * FROM users WHERE ${key} = ${value}`;
 	},

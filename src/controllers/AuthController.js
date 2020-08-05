@@ -130,6 +130,8 @@ module.exports = {
 		const id = req.decoded.result[0].id;
 		try {
 			const result = await AuthModel.getContact(id);
+			req.io.emit('contact', result);
+			// console.log(result)
 			return response(res, true, result, 200);
 			// if(result.length > 0){
 			// }

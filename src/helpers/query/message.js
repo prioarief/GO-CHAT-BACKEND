@@ -3,6 +3,9 @@ module.exports = {
 	getMessage: (receiver, sender) => {
 		return `SELECT * , (SELECT name from users WHERE users.id = chats.user) AS senderName, (SELECT name from users WHERE users.id = chats.receiver) AS receiverName FROM chats WHERE chats.receiver = ${receiver} AND chats.user = ${sender} OR chats.receiver = ${sender} AND chats.user = ${receiver}`;
 	},
+	updateMessage: (receiver, sender) => {
+		return `UPDATE chats SET status = 1 WHERE user = ${sender} AND receiver = ${receiver}`;
+	},
 	// getMyMessage: (me, id) => {
 	// 	return `SELECT chats.sender, chats.receiver , (SELECT name from users WHERE users.id = chats.sender) AS senderName, (SELECT name from users WHERE users.id = chats.receiver) AS receiverName FROM chats WHERE chats.sender = ${me} AND chats.receiver = ${id} OR WHERE chats.receiver = ${me} AND chats.sender = ${id}`;
 	// },
