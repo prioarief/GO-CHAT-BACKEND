@@ -80,9 +80,9 @@ module.exports = {
 			id: parseInt(req.params.id),
 		};
 		try {
-			console.log(data)
 			// const validation = validate.getMessageValidation(data);
 			const result = await updateStatusMessage(data);
+			req.io.emit('read', data.id);
 			return response(res, true, result, 200);
 			// if (result) {
 				// req.io.emit('chat-list', result);
